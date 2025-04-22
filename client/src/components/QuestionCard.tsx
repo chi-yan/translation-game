@@ -76,7 +76,15 @@ export default function QuestionCard({
             disabled={hasAnswered}
             className={getOptionClassName(index)}
           >
-            {option}
+            <div className="flex justify-between items-center">
+              <span>{option}</span>
+              {hasAnswered && index === question.correctIndex && (
+                <span className="font-bold uppercase text-white ml-3">✓ CORRECT</span>
+              )}
+              {hasAnswered && index === selectedOption && index !== question.correctIndex && (
+                <span className="font-bold uppercase text-white ml-3">✗ INCORRECT</span>
+              )}
+            </div>
           </button>
         ))}
       </div>
