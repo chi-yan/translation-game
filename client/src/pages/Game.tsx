@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type TranslationQuestion } from "@shared/schema";
 import GameContainer from "@/components/GameContainer";
@@ -12,13 +12,17 @@ export default function Game() {
   // Fetch questions from the API
   const { data: questions, isLoading, isError, error, refetch } = useQuery<TranslationQuestion[]>({
     queryKey: ["/api/questions"],
-    onSuccess: () => {
+    staleTime: 60000,
+  });
+  
+  // Set game state based on query status
+  useEffect(() => {
+    if (questions && !isLoading) {
       setGameState("playing");
-    },
-    onError: () => {
+    } else if (isError) {
       setGameState("loading");
     }
-  });
+  }, [questions, isLoading, isError]);
 
   const handleRestart = async () => {
     setGameState("loading");
