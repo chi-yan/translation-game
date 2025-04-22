@@ -30,14 +30,14 @@ export default function QuestionCard({
     }
 
     if (index === question.correctIndex) {
-      return "w-full text-left p-4 border-2 border-success bg-success text-white rounded-md transition-colors";
+      return "w-full text-left p-4 border-2 border-green-600 bg-green-500 font-bold text-white rounded-md transition-colors";
     }
 
     if (index === selectedOption && index !== question.correctIndex) {
-      return "w-full text-left p-4 border-2 border-error bg-error text-white rounded-md transition-colors";
+      return "w-full text-left p-4 border-2 border-red-600 bg-red-500 font-bold text-white rounded-md transition-colors";
     }
 
-    return "w-full text-left p-4 border border-gray-300 rounded-md opacity-70 transition-colors";
+    return "w-full text-left p-4 border border-gray-300 bg-gray-50 rounded-md opacity-70 transition-colors";
   };
 
   return (
