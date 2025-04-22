@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type TranslationQuestion } from "@shared/schema";
 import GameContainer from "@/components/GameContainer";
+import AdminPanel from "@/components/AdminPanel";
 
 export default function Game() {
   const [gameState, setGameState] = useState<"loading" | "playing" | "results">("loading");
+  const [showAdmin, setShowAdmin] = useState(false);
+  const queryClient = useQueryClient();
   
   // Fetch questions from the API
   const { data: questions, isLoading, isError, error, refetch } = useQuery<TranslationQuestion[]>({
@@ -19,7 +22,12 @@ export default function Game() {
 
   const handleRestart = async () => {
     setGameState("loading");
+    await queryClient.invalidateQueries({ queryKey: ["/api/questions"] });
     await refetch();
+  };
+
+  const toggleAdmin = () => {
+    setShowAdmin(!showAdmin);
   };
 
   return (
@@ -29,7 +37,16 @@ export default function Game() {
         <header className="text-center mb-8">
           <h1 className="text-3xl font-bold text-neutral mb-2">Chinese Translation Game</h1>
           <p className="text-neutral/80">Test your Chinese to English translation skills!</p>
+          <button 
+            onClick={toggleAdmin}
+            className="mt-4 text-xs text-gray-400 hover:text-gray-600"
+          >
+            {showAdmin ? "Hide Admin" : "Admin"}
+          </button>
         </header>
+
+        {/* Admin Panel (only shown when toggled) */}
+        {showAdmin && <AdminPanel />}
 
         {/* Game Content */}
         {isLoading ? (
